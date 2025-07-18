@@ -118,12 +118,12 @@ const WheelContainer: React.FC<WheelContainerProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200/50 h-full">
+    <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100 h-full">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">
           Your Custom Spinner
         </h2>
-        <p className="text-gray-600">
+        <p className="text-lg text-gray-600 font-light">
           {segments.length === 0 
             ? 'Add segments to get started'
             : `${segments.length} segments ready to spin`
@@ -185,21 +185,21 @@ const WheelContainer: React.FC<WheelContainerProps> = ({
 
       {/* Last Result */}
       {lastResult && (
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200/50">
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 border border-green-200/50 shadow-lg">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
               🎉 Winner!
             </h3>
-            <div className="flex items-center justify-center space-x-3 mb-2">
+            <div className="flex items-center justify-center space-x-4 mb-4">
               <div 
-                className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                className="w-8 h-8 rounded-full border-2 border-white shadow-md"
                 style={{ backgroundColor: lastResult.segment.color }}
               ></div>
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-2xl font-bold text-gray-900">
                 {lastResult.segment.text}
               </span>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-base text-gray-600">
               Spun at {lastResult.timestamp.toLocaleTimeString()}
             </p>
           </div>

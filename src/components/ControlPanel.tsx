@@ -145,20 +145,20 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+    <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 border-b border-gray-200/50">
-        <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center">
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-8 border-b border-gray-100">
+        <h2 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
           <Settings className="w-5 h-5 mr-2" />
           Wheel Settings
         </h2>
-        <p className="text-gray-600">Customize your spinning wheel</p>
+        <p className="text-lg text-gray-600 font-light">Customize your spinning wheel</p>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-8 space-y-8">
         {/* Templates */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-base font-semibold text-gray-700 mb-4">
             Choose Template
           </label>
           <select
@@ -177,10 +177,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
         {/* Add Segment */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-base font-semibold text-gray-700 mb-4">
             Add New Segment
           </label>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <input
               type="text"
               value={newSegmentText}
@@ -221,8 +221,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         {/* Segments List */}
         {segments.length > 0 && (
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="flex items-center justify-between mb-4">
+              <label className="block text-base font-semibold text-gray-700">
                 Wheel Segments ({segments.length})
               </label>
               <button
@@ -248,8 +248,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         )}
 
         {/* Actions */}
-        <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200">
-          <div className="flex space-x-3">
+        <div className="flex flex-col space-y-4 pt-6 border-t border-gray-200">
+          <div className="flex space-x-4">
             <button
               onClick={handleExportWheel}
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -269,7 +269,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               />
             </label>
           </div>
-          <div className="flex space-x-3 pt-2">
+          <div className="flex space-x-4 pt-2">
             <button
               onClick={() => setIsSaveModalOpen(true)}
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"

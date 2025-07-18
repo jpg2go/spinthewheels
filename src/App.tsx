@@ -1,398 +1,212 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import WheelContainer from './components/WheelContainer';
-import ControlPanel from './components/ControlPanel';
-import { WheelSegment } from './types/wheel';
-import { defaultSegments } from './data/defaultSegments';
+import React, { useRef, useEffect, useState } from 'react';
+import { Play, Volume2, VolumeX } from 'lucide-react';
+import { WheelSegment, SpinResult } from '../types/wheel';
+import SpinWheel from './SpinWheel';
+import spinMusic from '../assets/spin-music.mp3';
+import applause from '../assets/applause.mp3';
 
-function App() {
-  const [segments, setSegments] = useState<WheelSegment[]>(defaultSegments);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState('custom');
+interface WheelContainerProps {
+  segments: WheelSegment[];
+  onSpin: (result: SpinResult) => void;
+  isSpinning: boolean;
+  setIsSpinning: (spinning: boolean) => void;
+}
 
-  // Load template from localStorage if coming from Wheels page
+const WheelContainer: React.FC<WheelContainerProps> = ({
+  segments,
+  onSpin,
+  isSpinning,
+  setIsSpinning
+}) => {
+  const [lastResult, setLastResult] = useState<SpinResult | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const spinMusicRef = useRef<HTMLAudioElement | null>(null);
+  const applauseRef = useRef<HTMLAudioElement | null>(null);
+
   useEffect(() => {
-    const savedTemplate = localStorage.getItem('selectedTemplate');
-    if (savedTemplate) {
+    // Create audio context for spin sound (using web audio API for compatibility)
+    const createSpinSound = () => {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      const playSpinSound = () => {
+        if (!soundEnabled) return;
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+      };
+
+      return playSpinSound;
+    };
+
+    audioRef.current = createSpinSound as unknown as HTMLAudioElement;
+  }, [soundEnabled]);
+
+  const handleSpin = () => {
+    if (isSpinning || segments.length === 0) return;
+
+    setIsSpinning(true);
+
+    // Play spin music
+    if (spinMusicRef.current && soundEnabled) {
+      spinMusicRef.current.currentTime = 0;
+      spinMusicRef.current.volume = 0.5;
+      spinMusicRef.current.play();
+    }
+
+    // Play sound (legacy beep)
+    if (audioRef.current && soundEnabled) {
       try {
-        const template = JSON.parse(savedTemplate);
-        setSegments(template.segments);
-        setSelectedTemplate(template.id);
-        localStorage.removeItem('selectedTemplate'); // Clear after loading
+        (audioRef.current as unknown as () => void)();
       } catch (error) {
-        console.error('Error loading template:', error);
+        console.log('Audio playback failed:', error);
       }
     }
-  }, []);
 
-  const handleAddSegment = (text: string, color: string) => {
-    const newSegment: WheelSegment = {
-      id: Date.now().toString(),
-      text,
-      color,
-      weight: 1
-    };
-    setSegments(prev => [...prev, newSegment]);
-  };
+    // Simulate spin duration
+    const spinDuration = 3000 + Math.random() * 2000; // 3-5 seconds
 
-  const handleUpdateSegment = (id: string, updates: Partial<WheelSegment>) => {
-    setSegments(prev => prev.map(segment => 
-      segment.id === id ? { ...segment, ...updates } : segment
-    ));
-  };
+    setTimeout(() => {
+      // Select random segment based on weights
+      const totalWeight = segments.reduce((sum, segment) => sum + segment.weight, 0);
+      let random = Math.random() * totalWeight;
 
-  const handleDeleteSegment = (id: string) => {
-    setSegments(prev => prev.filter(segment => segment.id !== id));
+      let selectedSegment = segments[0];
+      for (const segment of segments) {
+        random -= segment.weight;
+        if (random <= 0) {
+          selectedSegment = segment;
+          break;
+        }
+      }
+
+      const result: SpinResult = {
+        id: Date.now().toString(),
+        segment: selectedSegment,
+        timestamp: new Date(),
+        spinDuration
+      };
+
+      setLastResult(result);
+      setIsSpinning(false);
+      onSpin(result);
+
+      // Stop spin music
+      if (spinMusicRef.current) {
+        spinMusicRef.current.pause();
+        spinMusicRef.current.currentTime = 0;
+      }
+      // Play applause
+      if (applauseRef.current && soundEnabled) {
+        applauseRef.current.currentTime = 0;
+        applauseRef.current.volume = 0.7;
+        applauseRef.current.play();
+      }
+    }, spinDuration);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      <div className="animated-bg"></div>
-      
-      <Header />
-      
-      <main className="relative z-10">
-        <Routes>
-          <Route path="/" element={
-            <section className="py-12 md:py-20">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12">
-                  <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
-                    Spin the Spinner
-                  </h1>
-                  <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Want to make a decision, pick a winner, or just have some fun? With this free spinning app, you can create your own custom spinners in seconds. No sign-up, no hassle. Just add your options and spin!
-                  </p>
-                </div>
+    <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200/50 h-full">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Your Custom Spinner
+        </h2>
+        <p className="text-gray-600">
+          {segments.length === 0 
+            ? 'Add segments to get started'
+            : `${segments.length} segments ready to spin`
+          }
+        </p>
+      </div>
 
-                {/* Main App Container */}
-                <div className="grid lg:grid-cols-3 gap-8">
-                  {/* Wheel Section */}
-                  <div className="lg:col-span-2">
-                    <WheelContainer
-                      segments={segments}
-                      onSpin={() => {}}
-                      isSpinning={isSpinning}
-                      setIsSpinning={setIsSpinning}
-                    />
-                  </div>
+      {/* Wheel */}
+      <div className="flex justify-center mb-8">
+        <div className="relative">
+          <SpinWheel 
+            segments={segments} 
+            isSpinning={isSpinning}
+            lastResult={lastResult}
+          />
+          
+          {/* Center Spin Button */}
+          <button
+            onClick={handleSpin}
+            disabled={isSpinning || segments.length === 0}
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                      w-16 h-16 bg-white rounded-full shadow-lg border-4 border-indigo-600
+                      flex items-center justify-center hover:scale-110 transition-transform
+                      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                      z-10"
+          >
+            <Play className={`w-6 h-6 text-indigo-600 ${isSpinning ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
+      </div>
 
-                  {/* Control Panel */}
-                  <div className="space-y-6">
-                    <ControlPanel
-                      segments={segments}
-                      onAddSegment={handleAddSegment}
-                      onUpdateSegment={handleUpdateSegment}
-                      onDeleteSegment={handleDeleteSegment}
-                      setSegments={setSegments}
-                      selectedTemplate={selectedTemplate}
-                      setSelectedTemplate={setSelectedTemplate}
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-          } />
-        </Routes>
+      {/* Controls */}
+      <div className="flex justify-center items-center space-x-4 mb-6">
+        <button
+          onClick={handleSpin}
+          disabled={isSpinning || segments.length === 0}
+          className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                    rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 
+                    transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+                    transform hover:scale-105 active:scale-95"
+        >
+          {isSpinning ? 'Spinning...' : 'Spin the Spinner'}
+        </button>
+        <button
+          onClick={() => setSoundEnabled(!soundEnabled)}
+          className="p-3 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+          title={soundEnabled ? 'Disable sound' : 'Enable sound'}
+        >
+          {soundEnabled ? (
+            <Volume2 className="w-5 h-5 text-gray-700" />
+          ) : (
+            <VolumeX className="w-5 h-5 text-gray-700" />
+          )}
+        </button>
+        {/* Hidden audio elements */}
+        <audio ref={spinMusicRef} src={spinMusic} preload="auto" />
+        <audio ref={applauseRef} src={applause} preload="auto" />
+      </div>
 
-        {/* How It Works Section */}
-        <section className="py-16 bg-white/50 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                How to Use This Spinning Wheel
-              </h2>
-              <p className="text-lg text-gray-600">
-                Get started in three easy steps—no tech skills required!
-              </p>
+      {/* Last Result */}
+      {lastResult && (
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200/50">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              🎉 Winner!
+            </h3>
+            <div className="flex items-center justify-center space-x-3 mb-2">
+              <div 
+                className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                style={{ backgroundColor: lastResult.segment.color }}
+              ></div>
+              <span className="text-xl font-bold text-gray-900">
+                {lastResult.segment.text}
+              </span>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-2xl">
-                  🎨
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Customize Your Wheel</h3>
-                <p className="text-gray-600">Add your options, choose colors, or select from templates. Make it your own!</p>
-              </div>
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-2xl">
-                  🎯
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Spin the Wheel</h3>
-                <p className="text-gray-600">Click the spin button and watch the wheel animate with realistic effects.</p>
-              </div>
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-2xl">
-                  🏆
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Get Results</h3>
-                <p className="text-gray-600">See the winner, celebrate, and share your results with friends or colleagues.</p>
-              </div>
-            </div>
+            <p className="text-sm text-gray-600">
+              Spun at {lastResult.timestamp.toLocaleTimeString()}
+            </p>
           </div>
-        </section>
-
-        {/* Powerful Features Section */}
-        <section id="features" className="py-16 bg-white/50 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Features That Make Decision-Making Fun
-              </h2>
-              <p className="text-lg text-gray-600">
-                Everything you need for a smooth, fair, and fun spinning experience.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🎨</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Custom Design</h3>
-                <p className="text-gray-600">Personalize colors, text, and segments to match your needs</p>
-              </div>
-
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">📱</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Mobile Ready</h3>
-                <p className="text-gray-600">Works perfectly on all devices with touch support</p>
-              </div>
-
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">📊</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Statistics</h3>
-                <p className="text-gray-600">Track spin history and analyze results</p>
-              </div>
-
-              <div className="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🚀</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Fast & Smooth</h3>
-                <p className="text-gray-600">Optimized animations and instant responsiveness</p>
-              </div>
-            </div>
-
-            {/* Further Refined Comparison Table */}
-            <div className="mt-16 overflow-x-auto bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 shadow-lg py-10 px-4 md:px-10">
-              <div className="flex flex-col items-center mb-2">
-                <span className="inline-block bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3 shadow">Top Choice</span>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Why Choose SpintheWheels?</h2>
-              </div>
-              <p className="text-center text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-                SpintheWheels stands out for its ease of use, flexibility, and reliability. See how this tool compares to others and why so many people trust it for their random picks and decisions.
-              </p>
-              <div className="rounded-2xl overflow-hidden border-4 border-transparent bg-clip-padding bg-gradient-to-r from-indigo-200 via-white to-purple-200 mb-8">
-                <table className="min-w-full bg-white rounded-2xl shadow text-sm md:text-base">
-                  <thead>
-                    <tr className="bg-gradient-to-r from-indigo-100 to-purple-100">
-                      <th className="py-3 px-4 font-semibold text-gray-700 text-left flex items-center gap-2"><span>Feature</span> <span className='text-base'>🔍</span></th>
-                      <th className="py-3 px-4 font-semibold text-indigo-700 bg-gradient-to-r from-indigo-200 to-purple-200 border-l-4 border-indigo-400">SpintheWheels ⭐</th>
-                      <th className="py-3 px-4 font-semibold text-gray-700">Competitor A</th>
-                      <th className="py-3 px-4 font-semibold text-gray-700">Competitor B</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Unlimited Segments</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                      <td className="text-green-600 font-bold text-center">✅</td>
-                    </tr>
-                    <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Custom Colors</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-green-600 font-bold text-center">✅</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                    </tr>
-                    <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Free to Use</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                    </tr>
-                    <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">No Signup Required</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                      <td className="text-green-600 font-bold text-center">✅</td>
-                    </tr>
-                    <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Mobile Friendly</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-green-600 font-bold text-center">✅</td>
-                      <td className="text-green-600 font-bold text-center">✅</td>
-                    </tr>
-                    <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Export/Import Configs</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                    </tr>
-                    <tr className="hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Realistic Animations</td>
-                      <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
-                      <td className="text-green-600 font-bold text-center">✅</td>
-                      <td className="text-red-500 font-bold text-center">❌</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Perfect for Every Occasion (Use Cases) */}
-        <section className="py-16 bg-gradient-to-br from-indigo-50 to-purple-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Perfect for Every Occasion
-              </h2>
-              <p className="text-lg text-gray-600">
-                Use this random picker for classrooms, parties, meetings, games, and more. The possibilities are endless!
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="text-4xl mb-4">🎓</div>
-                <h3 className="text-xl font-semibold mb-3">Education</h3>
-                <p className="text-gray-600">
-                  Make learning fun with random question selection, group assignments, and interactive classroom activities.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="text-4xl mb-4">💼</div>
-                <h3 className="text-xl font-semibold mb-3">Business</h3>
-                <p className="text-gray-600">
-                  Team building activities, meeting icebreakers, and fair task distribution among team members.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="text-4xl mb-4">🎉</div>
-                <h3 className="text-xl font-semibold mb-3">Events & Parties</h3>
-                <p className="text-gray-600">
-                  Party games, prize giveaways, and entertainment that keeps everyone engaged and excited.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="text-4xl mb-4">🤔</div>
-                <h3 className="text-xl font-semibold mb-3">Daily Decisions</h3>
-                <p className="text-gray-600">
-                  What to eat, where to go, what to watch - let the wheel help you make those everyday choices.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="text-4xl mb-4">🎮</div>
-                <h3 className="text-xl font-semibold mb-3">Gaming</h3>
-                <p className="text-gray-600">
-                  Random character selection, challenge modes, and adding unpredictability to your games.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="text-4xl mb-4">🎨</div>
-                <h3 className="text-xl font-semibold mb-3">Creative Projects</h3>
-                <p className="text-gray-600">
-                  Art prompts, writing inspiration, and creative challenges to spark your imagination.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQs Section */}
-        <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-base text-gray-500">
-                Got questions? Here are some quick answers about using this spinner app.
-              </p>
-            </div>
-            {/* Professional Engaging Accordion FAQ */}
-            {(() => {
-              const faqs = [
-                {
-                  question: 'Is this spinning wheel free to use?',
-                  answer: 'Absolutely! You can use all features for free. There are no hidden costs or subscriptions.'
-                },
-                {
-                  question: 'Can I use it on my phone or tablet?',
-                  answer: 'Yes, the app is fully responsive and works great on any device.'
-                },
-                {
-                  question: 'How random are the results?',
-                  answer: 'The spinner uses advanced algorithms to make sure every spin is fair and random.'
-                },
-                {
-                  question: 'Can I save and share my wheels?',
-                  answer: 'You can export your wheel setups and share them, or import wheels from friends.'
-                },
-                {
-                  question: 'How many options can I add?',
-                  answer: 'Add as many as you like! The wheel automatically adjusts to fit your choices.'
-                }
-              ];
-              const [openIndex, setOpenIndex] = useState(-1);
-              return (
-                <div className="space-y-5">
-                  {faqs.map((faq, idx) => (
-                    <div
-                      key={idx}
-                      className={`transition-all duration-300 rounded-2xl shadow-lg bg-gradient-to-br from-white via-indigo-50 to-purple-50 border border-gray-100 group ${openIndex === idx ? 'ring-2 ring-indigo-400' : ''}`}
-                    >
-                      <button
-                        className={`w-full flex items-center justify-between px-7 py-6 text-left rounded-2xl focus:outline-none transition-colors duration-200 ${openIndex === idx ? 'text-indigo-800 font-extrabold' : 'text-gray-900 font-bold'} group-hover:bg-indigo-50/40 hover:bg-indigo-50/60`}
-                        onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
-                        aria-expanded={openIndex === idx}
-                        aria-controls={`faq-panel-${idx}`}
-                      >
-                        <h3 className="text-lg md:text-xl flex-1 font-semibold">{faq.question}</h3>
-                        <span className={`ml-6 flex items-center justify-center w-9 h-9 rounded-full border-2 transition-all duration-300 shadow ${openIndex === idx ? 'bg-indigo-500 border-indigo-500 text-white scale-110' : 'bg-white border-indigo-200 text-indigo-500 scale-100'}`}
-                        >
-                          {openIndex === idx ? (
-                            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="11" x2="17" y2="11" /></svg>
-                          ) : (
-                            <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus"><line x1="11" y1="5" x2="11" y2="17" /><line x1="5" y1="11" x2="17" y2="11" /></svg>
-                          )}
-                        </span>
-                      </button>
-                      <div
-                        id={`faq-panel-${idx}`}
-                        className={`overflow-hidden transition-all duration-500 ease-in-out px-7 ${openIndex === idx ? 'max-h-40 py-4 opacity-100' : 'max-h-0 py-0 opacity-0'}`}
-                        style={{
-                          transitionProperty: 'max-height, opacity, padding',
-                        }}
-                      >
-                        <div className={`pl-4 border-l-4 transition-all duration-300 ${openIndex === idx ? 'border-indigo-400 bg-indigo-50/40' : 'border-transparent'}`}>
-                          <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-                            {faq.answer}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              );
-            })()}
-          </div>
-        </section>
-
-      </main>
-
-      <Footer />
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default WheelContainer;
