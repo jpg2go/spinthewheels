@@ -185,4 +185,92 @@ export const wheelTemplates: CategorizedWheelTemplate[] = [
     ]
   },
   // Add more wheels as needed...
+  // Tools Category
+  {
+    id: 'random-password-generator',
+    name: 'Random Password Generator',
+    description: 'Generate secure passwords with different character types.',
+    category: 'Tools',
+    segments: [
+      { id: '1', text: 'Uppercase', color: '#EF4444', weight: 1 },
+      { id: '2', text: 'Lowercase', color: '#F97316', weight: 1 },
+      { id: '3', text: 'Numbers', color: '#EAB308', weight: 1 },
+      { id: '4', text: 'Symbols', color: '#22C55E', weight: 1 },
+      { id: '5', text: 'Mixed', color: '#3B82F6', weight: 1 }
+    ]
+  },
+  {
+    id: 'random-letter-picker',
+    name: 'Random Letter Picker',
+    description: 'Pick a random letter from the alphabet.',
+    category: 'Tools',
+    segments: [
+      { id: '1', text: 'A', color: '#EF4444', weight: 1 },
+      { id: '2', text: 'B', color: '#F97316', weight: 1 },
+      { id: '3', text: 'C', color: '#EAB308', weight: 1 },
+      { id: '4', text: 'D', color: '#22C55E', weight: 1 },
+      { id: '5', text: 'E', color: '#14B8A6', weight: 1 },
+      { id: '6', text: 'F', color: '#3B82F6', weight: 1 },
+      { id: '7', text: 'G', color: '#6366F1', weight: 1 },
+      { id: '8', text: 'H', color: '#8B5CF6', weight: 1 },
+      { id: '9', text: 'I', color: '#EC4899', weight: 1 },
+      { id: '10', text: 'J', color: '#F59E0B', weight: 1 },
+      { id: '11', text: 'K', color: '#10B981', weight: 1 },
+      { id: '12', text: 'L', color: '#6B7280', weight: 1 },
+      { id: '13', text: 'M', color: '#EF4444', weight: 1 },
+      { id: '14', text: 'N', color: '#F97316', weight: 1 },
+      { id: '15', text: 'O', color: '#EAB308', weight: 1 },
+      { id: '16', text: 'P', color: '#22C55E', weight: 1 },
+      { id: '17', text: 'Q', color: '#14B8A6', weight: 1 },
+      { id: '18', text: 'R', color: '#3B82F6', weight: 1 },
+      { id: '19', text: 'S', color: '#6366F1', weight: 1 },
+      { id: '20', text: 'T', color: '#8B5CF6', weight: 1 },
+      { id: '21', text: 'U', color: '#EC4899', weight: 1 },
+      { id: '22', text: 'V', color: '#F59E0B', weight: 1 },
+      { id: '23', text: 'W', color: '#10B981', weight: 1 },
+      { id: '24', text: 'X', color: '#6B7280', weight: 1 },
+      { id: '25', text: 'Y', color: '#EF4444', weight: 1 },
+      { id: '26', text: 'Z', color: '#F97316', weight: 1 }
+    ]
+  },
+  {
+    id: 'dice-roller',
+    name: 'Dice Roller',
+    description: 'Roll a virtual 6-sided die.',
+    category: 'Tools',
+    segments: [
+      { id: '1', text: '⚀', color: '#EF4444', weight: 1 },
+      { id: '2', text: '⚁', color: '#F97316', weight: 1 },
+      { id: '3', text: '⚂', color: '#EAB308', weight: 1 },
+      { id: '4', text: '⚃', color: '#22C55E', weight: 1 },
+      { id: '5', text: '⚄', color: '#3B82F6', weight: 1 },
+      { id: '6', text: '⚅', color: '#8B5CF6', weight: 1 }
+    ]
+  },
+  {
+    id: 'coin-flip',
+    name: 'Coin Flip',
+    description: 'Flip a virtual coin for quick decisions.',
+    category: 'Tools',
+    segments: [
+      { id: '1', text: 'Heads', color: '#F59E0B', weight: 1, emoji: '🪙' },
+      { id: '2', text: 'Tails', color: '#6366F1', weight: 1, emoji: '🪙' }
+    ]
+  },
+  {
+    id: 'random-direction',
+    name: 'Random Direction',
+    description: 'Get a random direction or compass point.',
+    category: 'Tools',
+    segments: [
+      { id: '1', text: 'North', color: '#EF4444', weight: 1, emoji: '⬆️' },
+      { id: '2', text: 'South', color: '#22C55E', weight: 1, emoji: '⬇️' },
+      { id: '3', text: 'East', color: '#3B82F6', weight: 1, emoji: '➡️' },
+      { id: '4', text: 'West', color: '#8B5CF6', weight: 1, emoji: '⬅️' },
+      { id: '5', text: 'Northeast', color: '#F97316', weight: 1, emoji: '↗️' },
+      { id: '6', text: 'Northwest', color: '#EC4899', weight: 1, emoji: '↖️' },
+      { id: '7', text: 'Southeast', color: '#14B8A6', weight: 1, emoji: '↘️' },
+      { id: '8', text: 'Southwest', color: '#F59E0B', weight: 1, emoji: '↙️' }
+    ]
+  }
 ];

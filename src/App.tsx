@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import WheelContainer from './components/WheelContainer';
@@ -12,6 +13,21 @@ function App() {
   const [segments, setSegments] = useState<WheelSegment[]>(defaultSegments);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('custom');
+
+  // Load template from localStorage if coming from Wheels page
+  useEffect(() => {
+    const savedTemplate = localStorage.getItem('selectedTemplate');
+    if (savedTemplate) {
+      try {
+        const template = JSON.parse(savedTemplate);
+        setSegments(template.segments);
+        setSelectedTemplate(template.id);
+        localStorage.removeItem('selectedTemplate'); // Clear after loading
+      } catch (error) {
+        console.error('Error loading template:', error);
+      }
+    }
+  }, []);
 
   const handleAddSegment = (text: string, color: string) => {
     const newSegment: WheelSegment = {
