@@ -29,12 +29,15 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [saveName, setSaveName] = useState('');
+  const [shareUrl, setShareUrl] = useState('');
   const [savedConfigs, setSavedConfigs] = useState<{name: string, data: unknown}[]>(() => {
     try {
       return JSON.parse(localStorage.getItem('savedConfigs') || '[]');
     } catch {
       return [];
     }
+  });
   const colors = [
     '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', 
     '#EF4444', '#6366F1', '#EC4899', '#14B8A6',
@@ -220,7 +223,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className="block text-sm font-medium text-gray-700">
-                Spinner Segments ({segments.length})
+                Wheel Segments ({segments.length})
               </label>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
