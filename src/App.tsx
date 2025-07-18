@@ -61,10 +61,10 @@ function App() {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                   <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
-                    Spin the Wheels
+                    Spin the Spinner
                   </h1>
                   <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Want to make a decision, pick a winner, or just have some fun? With this free spinning wheel app, you can create your own custom wheels in seconds. No sign-up, no hassle. Just add your options and spin!
+                    Want to make a decision, pick a winner, or just have some fun? With this free spinning app, you can create your own custom spinners in seconds. No sign-up, no hassle. Just add your options and spin!
                   </p>
                 </div>
 

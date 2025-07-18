@@ -13,11 +13,11 @@ const Footer: React.FC = () => {
                 <RotateCcw className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                SpintheWheels
+                SpintheSpinner
               </span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
-              Create, spin, and decide. SpintheWheels makes every choice fun and easy. Use it for games, meetings, or whenever you need a little randomness in your day.
+              Create, spin, and decide. SpintheSpinner makes every choice fun and easy. Use it for games, meetings, or whenever you need a little randomness in your day.
             </p>
             <div className="flex space-x-4">
               <a 
@@ -107,7 +107,7 @@ const Footer: React.FC = () => {
             <span>by the SpintheWheels team</span>
           </div>
           <div className="text-gray-400 text-sm">
-            © 2025 SpintheWheels. All rights reserved.
+            © 2025 SpintheSpinner. All rights reserved.
           </div>
         </div>
       </div>

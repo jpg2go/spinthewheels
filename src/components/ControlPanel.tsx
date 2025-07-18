@@ -29,16 +29,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [savedWheels, setSavedWheels] = useState<{name: string, data: unknown}[]>(() => {
+  const [savedConfigs, setSavedConfigs] = useState<{name: string, data: unknown}[]>(() => {
     try {
-      return JSON.parse(localStorage.getItem('savedWheels') || '[]');
+      return JSON.parse(localStorage.getItem('savedConfigs') || '[]');
     } catch {
       return [];
     }
-  });
-  const [saveName, setSaveName] = useState('');
-  const [shareUrl, setShareUrl] = useState('');
-
   const colors = [
     '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', 
     '#EF4444', '#6366F1', '#EC4899', '#14B8A6',
@@ -110,19 +106,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     }
   };
 
-  const saveCurrentWheel = () => {
+  const saveCurrentConfig = () => {
     if (!saveName.trim()) return;
-    const wheelData = {
+    const configData = {
       name: saveName.trim(),
       data: { segments, template: selectedTemplate, savedAt: new Date().toISOString() }
     };
-    const updated = [wheelData, ...savedWheels.filter(w => w.name !== saveName.trim())];
-    setSavedWheels(updated);
-    localStorage.setItem('savedWheels', JSON.stringify(updated));
+    const updated = [configData, ...savedConfigs.filter(w => w.name !== saveName.trim())];
+    setSavedConfigs(updated);
+    localStorage.setItem('savedConfigs', JSON.stringify(updated));
     setSaveName('');
   };
 
-  const loadWheel = (data: unknown) => {
+  const loadConfig = (data: unknown) => {
     if (typeof data === 'object' && data !== null && 'segments' in data && Array.isArray((data as unknown as { segments: WheelSegment[] }).segments)) {
       setSegments((data as unknown as { segments: WheelSegment[] }).segments);
       setSelectedTemplate((data as unknown as { template: string }).template || 'custom');
@@ -130,17 +126,17 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     }
   };
 
-  const deleteWheel = (name: string) => {
-    const updated = savedWheels.filter(w => w.name !== name);
-    setSavedWheels(updated);
-    localStorage.setItem('savedWheels', JSON.stringify(updated));
+  const deleteConfig = (name: string) => {
+    const updated = savedConfigs.filter(w => w.name !== name);
+    setSavedConfigs(updated);
+    localStorage.setItem('savedConfigs', JSON.stringify(updated));
   };
 
   const openShareModal = () => {
-    // Encode wheel config as base64 in URL
-    const wheelData = { segments, template: selectedTemplate };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(wheelData))));
-    const url = `${window.location.origin}${window.location.pathname}?wheel=${encoded}`;
+    // Encode spinner config as base64 in URL
+    const configData = { segments, template: selectedTemplate };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(configData))));
+    const url = `${window.location.origin}${window.location.pathname}?config=${encoded}`;
     setShareUrl(url);
     setIsShareModalOpen(true);
   };
@@ -151,9 +147,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 border-b border-gray-200/50">
         <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center">
           <Settings className="w-5 h-5 mr-2" />
-          Wheel Settings
+          Spinner Settings
         </h2>
-        <p className="text-gray-600">Customize your spinning wheel</p>
+        <p className="text-gray-600">Customize your spinner</p>
       </div>
 
       <div className="p-6 space-y-6">
@@ -167,7 +163,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             onChange={(e) => handleTemplateChange(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="custom">Custom Wheel</option>
+            <option value="custom">Custom Spinner</option>
             {wheelTemplates.map(template => (
               <option key={template.id} value={template.id}>
                 {template.name}
@@ -224,7 +220,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className="block text-sm font-medium text-gray-700">
-                Wheel Segments ({segments.length})
+                Spinner Segments ({segments.length})
               </label>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
@@ -275,7 +271,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               onClick={() => setIsSaveModalOpen(true)}
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
             >
-              <span>Saved Wheels</span>
+              <span>Saved Configs</span>
             </button>
             <button
               onClick={openShareModal}
@@ -294,18 +290,18 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           </button>
         </div>
       </div>
-      <Modal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)} title="Saved Wheels">
+      <Modal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)} title="Saved Configurations">
         <div className="space-y-4">
           <div className="flex space-x-2">
             <input
               type="text"
               value={saveName}
               onChange={e => setSaveName(e.target.value)}
-              placeholder="Wheel name..."
+              placeholder="Configuration name..."
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
             />
             <button
-              onClick={saveCurrentWheel}
+              onClick={saveCurrentConfig}
               disabled={!saveName.trim()}
               className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
             >
@@ -313,19 +309,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             </button>
           </div>
           <div className="max-h-48 overflow-y-auto divide-y">
-            {savedWheels.length === 0 && <div className="text-gray-500">No saved wheels.</div>}
-            {savedWheels.map(wheel => (
-              <div key={wheel.name} className="flex items-center justify-between py-2">
-                <span className="font-medium text-gray-900 truncate">{wheel.name}</span>
+            {savedConfigs.length === 0 && <div className="text-gray-500">No saved configurations.</div>}
+            {savedConfigs.map(config => (
+              <div key={config.name} className="flex items-center justify-between py-2">
+                <span className="font-medium text-gray-900 truncate">{config.name}</span>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => loadWheel(wheel.data)}
+                    onClick={() => loadConfig(config.data)}
                     className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
                   >
                     Load
                   </button>
                   <button
-                    onClick={() => deleteWheel(wheel.name)}
+                    onClick={() => deleteConfig(config.name)}
                     className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
                   >
                     Delete
@@ -336,9 +332,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           </div>
         </div>
       </Modal>
-      <Modal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title="Share Your Wheel">
+      <Modal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} title="Share Your Spinner">
         <div className="space-y-4">
-          <div className="text-gray-700">Copy and share this link to let others use your wheel:</div>
+          <div className="text-gray-700">Copy and share this link to let others use your spinner:</div>
           <div className="flex items-center space-x-2">
             <input
               type="text"

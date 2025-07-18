@@ -121,7 +121,7 @@ const WheelContainer: React.FC<WheelContainerProps> = ({
     <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200/50 h-full">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Your Custom Wheel
+          Your Custom Spinner
         </h2>
         <p className="text-gray-600">
           {segments.length === 0 
@@ -165,7 +165,7 @@ const WheelContainer: React.FC<WheelContainerProps> = ({
                     transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
                     transform hover:scale-105 active:scale-95"
         >
-          {isSpinning ? 'Spinning...' : 'Spin the Wheel'}
+          {isSpinning ? 'Spinning...' : 'Spin the Spinner'}
         </button>
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
