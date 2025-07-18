@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Download, Upload, Trash2, Settings } from 'lucide-react';
 import { WheelSegment } from '../types/wheel';
 import { wheelTemplates } from '../data/wheelTemplates';
@@ -44,6 +44,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     '#EF4444', '#6366F1', '#EC4899', '#14B8A6',
     '#F97316', '#84CC16', '#06B6D4', '#8B5A2B'
   ];
+
+  // Load template from localStorage if coming from Wheels page
+  useEffect(() => {
+  }, []);
 
   const handleAddSegment = () => {
     if (newSegmentText.trim()) {
