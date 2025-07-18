@@ -388,7 +388,6 @@ function App() {
           </div>
         </section>
 
-        {/* Templates Section */}
       </main>
 
       <Footer />
