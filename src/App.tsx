@@ -232,7 +232,7 @@ function App() {
                       <td className="text-green-600 font-bold text-center">✅</td>
                     </tr>
                     <tr className="border-b hover:bg-indigo-50 transition-colors">
-                      <td className="py-3 px-4">Export/Import Wheels</td>
+                      <td className="py-3 px-4">Export/Import Configs</td>
                       <td className="text-green-600 font-bold text-center bg-indigo-50">✅</td>
                       <td className="text-red-500 font-bold text-center">❌</td>
                       <td className="text-red-500 font-bold text-center">❌</td>
