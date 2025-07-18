@@ -21,9 +21,6 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/wheels" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-              Wheels
-            </Link>
             <a href="#features" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
               Features
             </a>
@@ -55,9 +52,6 @@ const Header: React.FC = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200/50">
             <nav className="space-y-4">
-              <Link to="/wheels" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">
-                Wheels
-              </Link>
               <a href="#features" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">
                 Features
               </a>

@@ -5,7 +5,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import WheelContainer from './components/WheelContainer';
 import ControlPanel from './components/ControlPanel';
-import WheelsPage from './pages/WheelsPage';
 import { WheelSegment } from './types/wheel';
 import { defaultSegments } from './data/defaultSegments';
 
@@ -97,7 +96,6 @@ function App() {
               </div>
             </section>
           } />
-          <Route path="/wheels" element={<WheelsPage />} />
         </Routes>
 
         {/* How It Works Section */}
