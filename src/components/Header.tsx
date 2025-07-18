@@ -30,7 +30,6 @@ const Header: React.FC = () => {
             <a href="#about" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
               About
             </a>
-            <Link to="/wheels" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">Wheels</Link>
             <div className="flex items-center space-x-4">
               <button className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-indigo-600 transition-colors">
                 <Share2 className="w-4 h-4" />
@@ -65,7 +64,6 @@ const Header: React.FC = () => {
               <a href="#about" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">
                 About
               </a>
-              <Link to="/wheels" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">Wheels</Link>
               <div className="pt-4 space-y-3">
                 <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                   <Share2 className="w-4 h-4" />
