@@ -29,6 +29,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [saveName, setSaveName] = useState('');
+  const [shareUrl, setShareUrl] = useState('');
   const [savedConfigs, setSavedConfigs] = useState<{name: string, data: unknown}[]>(() => {
     try {
       return JSON.parse(localStorage.getItem('savedConfigs') || '[]');
@@ -36,9 +38,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       return [];
     }
   });
-  const [saveName, setSaveName] = useState('');
-  const [savedWheels, setSavedWheels] = useState<{name: string, data: unknown}[]>([]);
-  const [shareUrl, setShareUrl] = useState('');
   const colors = [
     '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', 
     '#EF4444', '#6366F1', '#EC4899', '#14B8A6',
@@ -110,19 +109,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     }
   };
 
-  const saveCurrentWheel = () => {
+  const saveCurrentConfig = () => {
     if (!saveName.trim()) return;
-    const wheelData = {
+    const configData = {
       name: saveName.trim(),
       data: { segments, template: selectedTemplate, savedAt: new Date().toISOString() }
     };
-    const updated = [wheelData, ...savedWheels.filter(w => w.name !== saveName.trim())];
-    setSavedWheels(updated);
-    localStorage.setItem('savedWheels', JSON.stringify(updated));
+    const updated = [configData, ...savedConfigs.filter(w => w.name !== saveName.trim())];
+    setSavedConfigs(updated);
+    localStorage.setItem('savedConfigs', JSON.stringify(updated));
     setSaveName('');
   };
 
-  const loadWheel = (data: unknown) => {
+  const loadConfig = (data: unknown) => {
     if (typeof data === 'object' && data !== null && 'segments' in data && Array.isArray((data as unknown as { segments: WheelSegment[] }).segments)) {
       setSegments((data as unknown as { segments: WheelSegment[] }).segments);
       setSelectedTemplate((data as unknown as { template: string }).template || 'custom');
@@ -130,17 +129,17 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     }
   };
 
-  const deleteWheel = (name: string) => {
-    const updated = savedWheels.filter(w => w.name !== name);
-    setSavedWheels(updated);
-    localStorage.setItem('savedWheels', JSON.stringify(updated));
+  const deleteConfig = (name: string) => {
+    const updated = savedConfigs.filter(w => w.name !== name);
+    setSavedConfigs(updated);
+    localStorage.setItem('savedConfigs', JSON.stringify(updated));
   };
 
   const openShareModal = () => {
-    // Encode wheel config as base64 in URL
-    const wheelData = { segments, template: selectedTemplate };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(wheelData))));
-    const url = `${window.location.origin}${window.location.pathname}?wheel=${encoded}`;
+    // Encode spinner config as base64 in URL
+    const configData = { segments, template: selectedTemplate };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(configData))));
+    const url = `${window.location.origin}${window.location.pathname}?config=${encoded}`;
     setShareUrl(url);
     setIsShareModalOpen(true);
   };
@@ -275,7 +274,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               onClick={() => setIsSaveModalOpen(true)}
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
             >
-              <span>Saved Wheels</span>
+              <span>Saved Configs</span>
             </button>
             <button
               onClick={openShareModal}
@@ -305,7 +304,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
             />
             <button
-              onClick={saveCurrentWheel}
+              onClick={saveCurrentConfig}
               disabled={!saveName.trim()}
               className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
             >
@@ -313,19 +312,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             </button>
           </div>
           <div className="max-h-48 overflow-y-auto divide-y">
-            {savedWheels.length === 0 && <div className="text-gray-500">No saved wheels.</div>}
-            {savedWheels.map(wheel => (
-              <div key={wheel.name} className="flex items-center justify-between py-2">
-                <span className="font-medium text-gray-900 truncate">{wheel.name}</span>
+            {savedConfigs.length === 0 && <div className="text-gray-500">No saved wheels.</div>}
+            {savedConfigs.map(config => (
+              <div key={config.name} className="flex items-center justify-between py-2">
+                <span className="font-medium text-gray-900 truncate">{config.name}</span>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => loadWheel(wheel.data)}
+                    onClick={() => loadConfig(config.data)}
                     className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
                   >
                     Load
                   </button>
                   <button
-                    onClick={() => deleteWheel(wheel.name)}
+                    onClick={() => deleteConfig(config.name)}
                     className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
                   >
                     Delete
@@ -348,7 +347,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               onFocus={e => e.target.select()}
             />
             <button
-              onClick={() => {navigator.clipboard.writeText(shareUrl)}}
+              onClick={() => {navigator.clipboard.writeText(shareUrl);}}
               className="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm"
             >
               Copy
