@@ -21,21 +21,21 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/wheels" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
+            <Link to="/wheels" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
               Wheels
             </Link>
-            <a href="#features" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
+            <a href="#features" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
               Features
             </a>
-            <a href="#about" className="text-gray-700 hover:text-indigo-600 transition-colors font-medium">
+            <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
               About
             </a>
             <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-indigo-600 transition-colors">
+              <button className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors">
                 <Share2 className="w-4 h-4" />
                 <span>Share</span>
               </button>
-              <button className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+              <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 <Download className="w-4 h-4" />
                 <span>Export</span>
               </button>
@@ -55,13 +55,13 @@ const Header: React.FC = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200/50">
             <nav className="space-y-4">
-              <Link to="/wheels" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">
+              <Link to="/wheels" className="block text-gray-700 hover:text-blue-600 transition-colors font-medium">
                 Wheels
               </Link>
-              <a href="#features" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">
+              <a href="#features" className="block text-gray-700 hover:text-blue-600 transition-colors font-medium">
                 Features
               </a>
-              <a href="#about" className="block text-gray-700 hover:text-indigo-600 transition-colors font-medium">
+              <a href="#about" className="block text-gray-700 hover:text-blue-600 transition-colors font-medium">
                 About
               </a>
               <div className="pt-4 space-y-3">
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                   <Share2 className="w-4 h-4" />
                   <span>Share Wheel</span>
                 </button>
-                <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                   <Download className="w-4 h-4" />
                   <span>Export Wheel</span>
                 </button>
