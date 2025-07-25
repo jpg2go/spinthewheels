@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://spinthewheels.cc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url><loc>https://spinthewheels.cc/what-to-do</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/what-to-eat</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/yes-no</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/prize-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/spin-the-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/wheel-of-names</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/random-team-generator</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/color-picker</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/lucky-numbers</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/wheel-of-lunch</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/fast-food-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/truth-or-dare</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/heads-or-tails</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/random-password-generator</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/random-letter-picker</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/dice-roller</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/coin-flip</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/random-direction</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/the-wheel-of-fortune</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/magic-8-ball</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/twister-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/random-number-picker</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/wheel-of-birthdays</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/squid-game-roles</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/letter-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/country-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/state-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/date-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/mlb-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/nba-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://spinthewheels.cc/nfl-picker-wheel</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- ... (repeat for all wheelTemplates IDs) ... -->
+</urlset> 
